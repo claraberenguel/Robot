@@ -1,0 +1,131 @@
+#define motor1 10
+#define motor2 9
+#define motor3 8
+#define motor4 7
+#define motor5 6
+#define motor6 5
+
+#define trigPin 13
+#define echoPin 12
+#define led 2
+
+int speakerPin = 11;
+int numTones = 10;
+int tones[ ] = {261, 277, 294, 311, 330, 349, 370, 392, 415, 440,466, 494};
+                       // mid C C# D D# E F F# G G# A
+int i = 0;
+
+
+void setup() {
+  pinMode(motor1, OUTPUT);
+  pinMode(motor2, OUTPUT);
+  pinMode(motor3, OUTPUT);
+  pinMode(motor4, OUTPUT);
+  pinMode(motor5, OUTPUT);
+  pinMode(motor6, OUTPUT);
+
+  Serial.begin (9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void izquierda() {
+ analogWrite(motor1, 175);
+ digitalWrite(motor2, LOW);
+ digitalWrite(motor3, HIGH);
+ digitalWrite(motor4, LOW);
+ digitalWrite(motor5, HIGH);
+ analogWrite(motor6, 175);
+
+}
+
+void derecha() {
+ analogWrite(motor1, 175);
+ digitalWrite(motor2, HIGH);
+ digitalWrite(motor3, LOW);
+ digitalWrite(motor4, HIGH);
+ digitalWrite(motor5, LOW);
+ analogWrite(motor6, 175);
+
+}
+
+void delante() {
+ analogWrite(motor1, 175);
+ digitalWrite(motor2, LOW);
+ digitalWrite(motor3, HIGH);
+ digitalWrite(motor4, HIGH);
+ digitalWrite(motor5, LOW);
+ analogWrite(motor6, 175);
+
+}
+
+void atras() {
+ analogWrite(motor1, 175);
+ digitalWrite(motor2, HIGH);
+ digitalWrite(motor3, LOW);
+ digitalWrite(motor4, LOW);
+ digitalWrite(motor5, HIGH);
+ analogWrite(motor6, 175);
+
+}
+
+void musica(){
+    tone(speakerPin, tones[i]);
+    i++;
+    if (i >= numTones) { i = i%numTones; }
+}
+
+void loop () {
+
+  long duracion, distancia ;
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duracion = pulseIn(echoPin, HIGH) ;
+  distancia = duracion / 2 / 29.1  ;
+
+  Serial.println(String(distancia) + " cm.") ;
+  int Limite = 200 ;
+
+
+  // Lógica
+  if (distancia < 30)
+  {
+    musica();
+    derecha();
+    delay(350);
+  }
+  else
+  {
+    musica();
+    delante();
+    delay(500);
+  }
+
+  if (distancia < 15)
+   {
+     musica();
+     atras();
+     delay(500);
+     izquierda();
+     delay(350);
+  }
+
+}
+/*
+// Música
+
+
+             for (int i = 0; i < numTones; i++)
+                 {
+                     tone(speakerPin, tones[i]);
+                     delay(500);
+                 }
+             noTone(speakerPin);
+       }
+
+*/
